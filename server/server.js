@@ -1,18 +1,22 @@
+require('dotenv').config();
+
 const express = require("express");
 const app = express();
-const PORT = 8080;
 const cors = require("cors");
 const mongoose = require('mongoose');
 const Employee = require('./models/Employee');
 
-mongoose.connect('mongodb://192.168.100.52:27017/employees')
+const PORT = process.env.PORT || 8080; 
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', function(req, res, next) {
+app.get('/', (req, res) => {
   res.send("Hello World!");
 });
 
@@ -84,5 +88,5 @@ app.delete('/api/employees/:id', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-})
+  console.log(`Server started on port ${PORT}`);
+});

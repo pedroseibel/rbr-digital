@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
-  const [sortOrder, setSortOrder] = useState('asc'); // State for sorting order
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetch('/api/employees')
@@ -16,7 +16,7 @@ const Dashboard = () => {
       .then(data => {
         setEmployees(data);
       })
-      .catch(error => console.error('Error fetching employees:', error)); // Catch and log any fetch errors
+      .catch(error => console.error('Error fetching employees:', error));
   }, []);
 
   const handleSearch = (e) => setSearch(e.target.value);
