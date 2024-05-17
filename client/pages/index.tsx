@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc'); // State for sorting order
 
   useEffect(() => {
     fetch('/api/employees')
@@ -46,6 +47,20 @@ const Dashboard = () => {
     }
   };
 
+  const handleSort = () => {
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(newSortOrder);
+
+    const sortedEmployees = [...employees].sort((a, b) => {
+      if (newSortOrder === 'asc') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+    setEmployees(sortedEmployees);
+  };
+
   const filteredEmployees = employees.filter(emp => 
     emp.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -70,7 +85,9 @@ const Dashboard = () => {
         <Table variant="simple" size={buttonSize}>
           <Thead>
             <Tr>
-              <Th>Name</Th>
+              <Th onClick={handleSort} cursor="pointer">
+                Name {sortOrder === 'asc' ? '▲' : '▼'}
+              </Th>
               <Th>Title</Th>
               <Th>Department</Th>
               <Th>Actions</Th>
@@ -83,13 +100,13 @@ const Dashboard = () => {
                 <Td>{emp.title}</Td>
                 <Td>{emp.department}</Td>
                 <Td>
-                <Flex justify="flex-start">
-                  <Link href={`/edit-employee/${emp._id}`} passHref>
-                    <Button as="a" colorScheme="blue" mr={2}>Edit</Button>
-                  </Link>
-                  <Button colorScheme="red" onClick={() => openDialog(emp._id)}>Delete</Button>
-                </Flex>
-              </Td>
+                  <Flex justify="flex-start">
+                    <Link href={`/edit-employee/${emp._id}`} passHref>
+                      <Button as="a" colorScheme="blue" mr={2}>Edit</Button>
+                    </Link>
+                    <Button colorScheme="red" onClick={() => openDialog(emp._id)}>Delete</Button>
+                  </Flex>
+                </Td>
               </Tr>
             ))}
           </Tbody>
